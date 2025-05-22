@@ -81,3 +81,38 @@ def get_db() -> MySQLConnection:
         return connection
     except mysql.connector.Error as e:
         return None
+
+
+def main() -> None:
+    """
+    Obtain database connection and retrieve all rows in `users` table
+    in a filtered format
+    """
+    connection = get_db()
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM users")
+    rows = cursor.fetchall()
+
+    logger = get_logger()
+    fields = (
+            "name",
+            "email",
+            "phone",
+            "ssn",
+            "password",
+            "ip",
+            "last_login",
+            "user_agent"
+            )
+
+    for row in rows:
+        message = ("; ".join(f"{field}={str(value)}" for field, value in
+                             zip(fields, row)) + ";")
+        logger.info(message)
+
+    cursor.close()
+    connection.close()
+
+
+if __name__ == "__main__":
+    main()
