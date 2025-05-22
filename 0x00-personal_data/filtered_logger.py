@@ -4,7 +4,6 @@
 import os
 import logging
 import mysql.connector
-from mysql.connector.connection import MySQLConnection
 import re
 from typing import List
 
@@ -32,6 +31,7 @@ class RedactingFormatter(logging.Formatter):
     SEPARATOR = ";"
 
     def __init__(self, fields: List[str]):
+        """Initialize with fields to redact"""
         super(RedactingFormatter, self).__init__(self.FORMAT)
         self.fields = fields
 
@@ -63,7 +63,7 @@ def get_logger() -> logging.Logger:
     return logger
 
 
-def get_db() -> MySQLConnection:
+def get_db() -> mysql.connector.connection.MySQLConnection:
     """Returns a connector to the database"""
     return mysql.connector.connect(
             host=os.getenv("PERSONAL_DATA_DB_HOST", "localhost"),
