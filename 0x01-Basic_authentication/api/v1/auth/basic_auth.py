@@ -7,4 +7,15 @@ from api.v1.auth.auth import Auth
 class BasicAuth(Auth):
     """ Basic auth authentication system
     """
-    pass
+    def extract_base64_authorization_header(self, authorization_header: str
+                                            ) -> str:
+        """
+        Returns the Base64 part of the Authorization header for a
+        Basic Authentication
+        """
+        basic_prefix = "Basic "
+        if authorization_header is None \
+                or not isinstance(authorization_header, str) \
+                or not authorization_header.startswith(basic_prefix):
+            return None
+        return authorization_header[len(basic_prefix):]
