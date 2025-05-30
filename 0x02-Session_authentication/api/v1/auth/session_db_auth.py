@@ -21,7 +21,7 @@ class SessionDBAuth(SessionExpAuth):
 
         user_session = UserSession(user_id=user_id, session_id=session_id)
         user_session.save()
-        return session_id
+        return user_session.session_id
 
     def user_id_for_session_id(self, session_id=None):
         """ Returns the User ID by requesting UserSession in database
