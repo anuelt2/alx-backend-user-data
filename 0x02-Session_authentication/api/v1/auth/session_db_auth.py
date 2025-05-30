@@ -59,10 +59,11 @@ class SessionDBAuth(SessionExpAuth):
         if session_id is None:
             return False
 
-        sessions = UserSession.search({"session_id": session_id})
-        if not sessions:
+        user_sessions = UserSession.search({"session_id": session_id})
+        if not user_sessions:
             return False
 
         user_session = sessions[0]
         user_session.remove()
+        UserSession.save_to_file()
         return True
