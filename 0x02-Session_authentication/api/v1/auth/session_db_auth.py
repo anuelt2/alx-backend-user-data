@@ -21,7 +21,7 @@ class SessionDBAuth(SessionExpAuth):
 
         user_session = UserSession(user_id=user_id, session_id=session_id)
         user_session.save()
-        return user_session.session_id
+        return session_id
 
     def user_id_for_session_id(self, session_id=None):
         """ Returns the User ID by requesting UserSession in database
@@ -59,11 +59,10 @@ class SessionDBAuth(SessionExpAuth):
         if session_id is None:
             return False
 
-        user_sessions = UserSession.search({"session_id": session_id})
-        if not user_sessions:
+        sessions = UserSession.search({"session_id": session_id})
+        if not sessions:
             return False
 
         user_session = sessions[0]
         user_session.remove()
-        UserSession.save_to_file()
         return True
