@@ -65,4 +65,5 @@ class SessionDBAuth(SessionExpAuth):
 
         user_session = sessions[0]
         user_session.remove()
+        UserSession.save_to_file()
         return True
