@@ -5,7 +5,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from typing import TypeVar
+from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.exc import InvalidRequestError
 
 from user import Base, User
 
@@ -31,9 +32,19 @@ class DB:
             self.__session = DBSession()
         return self.__session
 
-    def add_user(self, email: str, hashed_password: str) -> TypeVar("User"):
+    def add_user(self, email: str, hashed_password: str) -> User:
         """Adds a user to the database and returns the user"""
         user = User(email=email, hashed_password=hashed_password)
         self._session.add(user)
         self._session.commit()
         return user
+
+    def find_user_by(self, **kwargs) -> User:
+        """Finds and returns first users row matching arbitrary keyword args"""
+        try:
+            user = self._session.query(User).filter_by(**kwargs).first()
+            if user is None:
+                raise NoResultFound()
+            return user
+        except InvalidRequestError as error:
+            raise error
